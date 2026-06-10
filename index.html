@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Защищённый лендинг | Введите пароль</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* Основной контейнер — карточка */
+    .card {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(0px);
+      border-radius: 2rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 8px 18px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      overflow: hidden;
+    }
+
+    /* Область для смены контента (форма / контент) */
+    .view {
+      padding: 2rem 2rem 2.5rem;
+    }
+
+    /* Стили для формы входа */
+    .lock-icon {
+      text-align: center;
+      font-size: 3.2rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+      color: #1e2a3e;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub {
+      text-align: center;
+      color: #5a6e7c;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #1f2d3d;
+      font-size: 0.9rem;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 1.25rem;
+      background: white;
+      transition: 0.2s;
+      outline: none;
+      font-family: monospace;
+    }
+
+    .password-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn {
+      width: 100%;
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 0.9rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .btn:hover {
+      background: #0f172a;
+      transform: scale(0.98);
+    }
+
+    .error-message {
+      background: #fee2e2;
+      color: #b91c1c;
+      padding: 0.7rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-bottom: 1.2rem;
+      display: none;
+    }
+
+    /* Контент (лендинг после успешного входа) */
+    .content-wrapper {
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1e2a3e, #2c3e66);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .hero p {
+      color: #475569;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .content-text {
+      background: #f8fafc;
+      padding: 1.6rem;
+      border-radius: 1.5rem;
+      line-height: 1.6;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .content-text p {
+      margin-bottom: 1rem;
+    }
+
+    .content-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .feature-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .feature {
+      background: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #1e40af;
+      border: 1px solid #d9e2ef;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .logout-btn {
+      background: #eef2ff;
+      color: #1e293b;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.2s;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+
+    .logout-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6c7a8a;
+      border-top: 1px solid #e9edf2;
+      padding-top: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Адаптив */
+    @media (max-width: 550px) {
+      .view {
+        padding: 1.5rem;
+      }
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    /* простой разделитель */
+    hr {
+      margin: 1rem 0;
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, #e2e8f0, transparent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="app">
+  <!-- Два состояния: форма ввода пароля или защищённый контент -->
+  <div id="loginView" class="view">
+    <div class="lock-icon">🔐</div>
+    <h2>Доступ по паролю</h2>
+    <div class="sub">Этот лендинг защищён. Введите пароль, чтобы увидеть содержимое.</div>
+    
+    <div id="errorBox" class="error-message">⚠️ Неверный пароль. Попробуйте ещё раз.</div>
+    
+    <div class="input-group">
+      <label for="passwordInput">Пароль</label>
+      <input type="password" id="passwordInput" class="password-input" placeholder="Введите пароль" autocomplete="off">
+    </div>
+    
+    <button id="submitBtn" class="btn">Войти →</button>
+    <div class="footer-note" style="margin-top:1.5rem; border:none; padding-top:0;">
+      * Пароль можно изменить в коде (переменная `CORRECT_PASSWORD`)
+    </div>
+  </div>
+
+  <div id="contentView" class="view" style="display: none;">
+    <div class="content-wrapper">
+      <div class="hero">
+        <h1>✨ Я ПЕЛИКЕН ✨</h1>
+        <p>Только для избранного пользователя</p>
+      </div>
+      
+      <div class="content-text">
+        <p><strong>👋 Привет!</strong> Кажется ты ввела правильный пароль, а значит ты именно та, единственная, для кого создана эта страница.</p>
+        <p>Кажется пришло наше время c тобой познакомиться!)</p>
+        <p>Я пеликен Артёма, который сказал, что ты очень дорогой для него человек и с которым он очень хотел бы поделиться моей силой.</p>
+            <p>Мы, пеликены, традиционный северный талисман, почитаемый коряками, чукчами и другими коренными народами Камчатки и Чукотки, мы еще считаемся весельчиками, что-то вроде ваших клоунов, только с большой силой. Я родился в поселении, находящемся на жерле древнего вулкана на Камчатке, оно называется Эссо. Там меня и сделал мой отец, знаменитый мастер эвен, Олег Кочетков. Он оставил свои инициалы на подошве мой ноги.</p>
+            <p>Я знаю, что ты очень хороший человек, мой хозяин очень сильно это чувствует и относится к тебе с трепетом. Он дарит меня тебе и знает, что ты будешь меня беречь также бережно, как и он.</p>
+            <p>С Артёмом мы встретились сразу после моего рождения 15 лет назад. Я был всегда с ним и оберегал его от нападок злых духов. Мы многое с ним прошли. Он брал меня с собой всегда, особенно когда предстояло не легкое путешествие.</p>
+                <p>Однажды я оберегал его, когда мы отправились в экспедицию на берег Берингова моря в устье реки Столбовая, там было много медведей, поход на пароме и вездеходе. Еще я был с ним, когда он ходил на корабле Дальний в город Охотск из Магадана, он там чуть не выпал из корабля во время сильного шторма, а еще капитан уснул за штурвалом и мне пришлось призвать дУхов, чтобы те повернули штурвал от прибрежных скал. Он брал меня и в другие страны, где мы увидели много нового и познакомились с интересными людьми и духами.</p>
+                <p>Я был с ним в Ключах, Усть-Камчатске, Козыресвке, Петропавловске-Камчатском, Хабаровске, Владивостоке, Магадане, Москве, Отрадном, Санкт-Петербурге, Оулу, Килле, Нью-Мюнстере, Гамбурге, Шлейзвиге-Гольштейне, Донецке, Горловке, Ялте, Алуште, Олекминске, других многих городах и даже в одном супермаркете в Швеции))</p>
+                <p>Кстати, тебе покажется это странным, однако я был с вами и когда вы были на Сахалине. Конечно, мне было трудно разглядеть тебя из кармана чемодана, но мне понравился твой голос и вкусный запах</p>
+            <p>Артем, сказал, что у тебя есть дУхи, которые тебя очень любят и оберегают. Я очень хочу с ними подружиться и всегда им помогать оберегать тебя. Я буду и ему помогать, находясь в твоих руках- наша связь с ним нерушима, похоже, как твоя с ним. Он в шутку, кажется, сказал, что она миндальная, но миндаль это орехи и я очень долго смеялся))</p>
+            <p>Я буду не просто напоминанием, о том, что ты встретила одного человека, который показался тебе необычным. Я буду твоим верным помощником и другом. Со мной даже можно поговорить, когда тебе будет тяжело. Да, да, Артем предупредил о твоих «цензорах» и что ты врятли сможешь произносить в слух, что либо, но это ничего, потому что со мной можно общаться мысленно, держа меня в руках и разглядывая меня.</p>
+            <p>Кстати, Артем так и не дал мне имя, поэтому его сможешь дать мне ты. И мы сразу с тобой познакомимся!)</p>
+            <p>Ты очень классная и добрая, я уже это знаю-мне рассказали об этом дУхи. Я очень рад встречи с тобой! Я буду оберегать тебя!</p>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end;">
+        <button id="logoutBtn" class="logout-btn">🚪 Выйти и заблокировать</button>
+      </div>
+      <div class="footer-note">
+        🔐 *Cессия хранится в памяти браузера до выхода или перезагрузки.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ======================= НАСТРОЙКИ ПАРОЛЯ =======================
+    // ⚙️ ИЗМЕНИТЕ ЭТОТ ПАРОЛЬ НА СВОЙ (латиница, цифры, символы)
+    const CORRECT_PASSWORD = "bloom_epta)";   // <--- СЮДА ВВЕДИТЕ ВАШ ПАРОЛЬ
+    
+    // Ключ для sessionStorage (сохраняем статус авторизации на время сессии вкладки)
+    const AUTH_STORAGE_KEY = "landing_auth_status";
+    
+    // DOM элементы
+    const loginView = document.getElementById('loginView');
+    const contentView = document.getElementById('contentView');
+    const passwordInput = document.getElementById('passwordInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorBox = document.getElementById('errorBox');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    // Функция показа ошибки
+    function showError(message) {
+      if (errorBox) {
+        errorBox.textContent = message || "⚠️ Неверный пароль. Попробуйте ещё раз.";
+        errorBox.style.display = "block";
+        // Автоскрытие через 3 секунды (не критично, но приятно)
+        setTimeout(() => {
+          if (errorBox) errorBox.style.display = "none";
+        }, 2800);
+      }
+      // Очистка поля пароля при ошибке (безопасность)
+      if (passwordInput) passwordInput.value = "";
+      passwordInput?.focus();
+    }
+    
+    // Функция успешного входа: показать контент, скрыть форму
+    function grantAccess() {
+      // Сохраняем статус в sessionStorage (до закрытия вкладки/браузера)
+      sessionStorage.setItem(AUTH_STORAGE_KEY, "true");
+      // Переключаем видимость
+      loginView.style.display = "none";
+      contentView.style.display = "block";
+      // Очищаем поле и ошибку
+      if (passwordInput) passwordInput.value = "";
+      if (errorBox) errorBox.style.display = "none";
+    }
+    
+    // Выход из системы: блокируем доступ и показываем форму логина
+    function revokeAccess() {
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
+      loginView.style.display = "block";
+      contentView.style.display = "none";
+      if (passwordInput) passwordInput.value = "";
+      if (errorBox) errorBox.style.display = "none";
+      // Небольшой фикс фокуса
+      setTimeout(() => passwordInput?.focus(), 50);
+    }
+    
+    // Проверка введённого пароля
+    function attemptLogin() {
+      const enteredPassword = passwordInput?.value || "";
+      // Сравнение (чувствительно к регистру)
+      if (enteredPassword === CORRECT_PASSWORD) {
+        grantAccess();
+      } else {
+        showError("❌ Неверный пароль. Доступ запрещён.");
+      }
+    }
+    
+    // Обработчик нажатия кнопки
+    if (submitBtn) {
+      submitBtn.addEventListener('click', attemptLogin);
+    }
+    
+    // Нажатие клавиши Enter в поле пароля
+    if (passwordInput) {
+      passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          attemptLogin();
+        }
+      });
+    }
+    
+    // Кнопка выхода (если существует)
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', revokeAccess);
+    }
+    
+    // Проверяем, авторизован ли пользователь ранее (при загрузке страницы)
+    function checkInitialAuth() {
+      const isAuth = sessionStorage.getItem(AUTH_STORAGE_KEY);
+      if (isAuth === "true") {
+        // Уже авторизован, показываем контент
+        loginView.style.display = "none";
+        contentView.style.display = "block";
+      } else {
+        // Не авторизован — форма пароля активна
+        loginView.style.display = "block";
+        contentView.style.display = "none";
+        // Для удобства ставим фокус на поле пароля
+        passwordInput?.focus();
+      }
+    }
+    
+    // Дополнительная безопасность: если пользователь попытается через консоль удалить sessionStorage, 
+    // всё равно принудительно проверяем при любом рендере. Но также при загрузке страницы
+    checkInitialAuth();
+    
+    // На случай, если кто-то переключит display через инспектор — дублируем защиту 
+    // (простая, но достаточная для большинства сценариев). Лучше не полагаться только на CSS/видимость,
+    // однако для лендинга с паролем на клиенте — этого достаточно и удобно.
+    // Дополнительно: наблюдатель за изменениями атрибутов style не требуется, т.к. встроенная логика кнопок
+    // и проверка сессии защищают. Но добавим "полицейский" интервал при желании? Необязательно, но для уверенности:
+    // Раз в 2 секунды проверяем, что состояние сессии соответствует отображаемому блоку. 
+    // Это предотвратит ручное вмешательство через консоль (смена стилей).
+    function secureViewsConsistency() {
+      const isAuthed = sessionStorage.getItem(AUTH_STORAGE_KEY) === "true";
+      const loginVisible = loginView.style.display !== "none";
+      const contentVisible = contentView.style.display !== "none";
+      
+      if (isAuthed && loginVisible) {
+        // Если авторизован, но почему-то видна форма — переключаем
+        loginView.style.display = "none";
+        contentView.style.display = "block";
+      } else if (!isAuthed && contentVisible) {
+        // Не авторизован, но виден контент — срочно блокируем
+        loginView.style.display = "block";
+        contentView.style.display = "none";
+        if (errorBox) errorBox.style.display = "none";
+        passwordInput?.focus();
+      }
+    }
+    
+    // Запускаем защитный интервал для синхронизации (каждые 1.5 сек, легковесно)
+    setInterval(secureViewsConsistency, 1500);
+    
+    // Также, если страница открыта и сессия есть, но кто-то чистит sessionStorage вручную,
+    // интервал всё равно скроет контент. Отличная защита от "простых" взломов через инспектор.
+    // (При этом пароль всё равно остаётся на клиенте — это архитектурное ограничение, для простого лендинга достаточно)
+    
+    // Доп. фича: если хотите предупреждение о попытке подбора — не нужно, сделано дружелюбно.
+    // Пользовательский опыт: кнопка выхода работает надёжно.
+    
+    // === Возможность изменять контент лендинга легко через HTML ===
+    // Весь текст для лендинга находится внутри блока #contentView .content-text, 
+    // поэтому вы можете прямо в этом коде менять параграфы, заголовки, добавлять картинки и т.д.
+    console.log("✅ Защищённый лендинг загружен. Пароль по умолчанию: " + CORRECT_PASSWORD + " (измените в коде)");
+  })();
+</script>
+</body>
+</html>
